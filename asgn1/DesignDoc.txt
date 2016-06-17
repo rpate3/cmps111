@@ -1,0 +1,77 @@
+Assignment 1 : Shell
+
+Rahul Patel
+
+rpate3@ucsc.edu
+
+CMPS 111, Spring 2016
+
+ASGN1 : Shell
+
+1	Goal 
+
+The goal of this program is to write a shell in FreeBSD that allows the user to run programs from the command line. The shell should be able to support multiple commands on the line and support error handling. Some requirements this shell must support are: exit, command with one or more arguments, command with or without arguments that write output to a file, I/O redirection, piping, and multiple commands on the same line.
+
+2	Available Resources
+
+The available resources we can use for this project are some functions from the C library such as printf(). Furthermore, based on the instructions resources we can use include: exit(), fork(), execvp(), wait(), open(), close(), dup() or dup2(), and pipe(). In addition using argshell.c and shell.l which is provided on the assignment page. 
+
+
+3	Design
+
+The approach I am going to take when writing this program is following the structure Professor Miller laid out in the instructions. After studying and learning the function of the shell.l and argshell.c files I will start implementing the supported features. I will begin with feature number 1 and go till 9 testing each feature after implementation to make sure they work. I believe this will be a fruitful strategy because the instructions specify the details, concepts, and library calls for each command. For implementation, I will read the command line and have the shell run each command in consecutive order, each waiting for the one prior to finish. Checking for the special characters will be the most tricky part because each character has a special function in the shell.
+
+After completing this assignment as much as I can, not all the functionality of each function is perfect. The piping functionality is buggy when the user passes in flags such as ls -l | pwdor pwd | ls -l. The piping function does work for single commands such as pwd | cat or ls | pwd. 
+The semi colon function does accept ; on the command line however it only executes the first command and does not reach the second command. 
+
+
+3.1 Overall Structure
+		
+	Enter the shell
+		-Display a prompt to the user 
+		-Read in strings that user writes on command line 
+			-Throw error if file is not found 
+		-Send read string in arguments to a function to determine execution
+-Use strcmp to determine which function to call
+	-( ) < > | & ; are the special case arguments
+	-Throw print error if corrupted file
+		-If multiple inputs on command line read left to right separated by semicolon
+			-Throw print error if corrupted file or process not finished 
+		-Exit the shell at anytime if user calls exit
+
+
+
+
+4	Pseudocode 
+
+procedure MYSHELL
+main -> run_loop() 
+
+	run_loop(): 
+		prompts user with command line 
+		get the line arguments and send them to be processed
+	process():
+		check for special characters or flag and execute respective command
+	
+	if_exit(); if first comparison determines exit then exit the shell else continue 
+		return to prompting user ($: )
+	input_redirection(); if < is detected on command line call appropriate function
+		return to prompting user ($: )
+	output_redirection();  > or  >> is detected on command line call appropriate function
+		return to prompting user ($: )
+	piping(); | is detected on command line call appropriate function
+		return to prompting user ($: )
+	checking for all the legal flags and characters
+		return to prompting user ($: )
+	as well as errors for all system calls used
+	
+
+
+
+
+5 Testing 
+
+
+The test strategy for this program will be after each step of implementation (1-9) i will run several commands to ensure the program is functioning correctly. I will intentionally exercise the error handling methods by throwing incorrect command, calling files that do not exist, and passing in corrupted data. 
+		
+
